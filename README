@@ -1,0 +1,32 @@
+This program allows you to evaluate circuits on encrypted data via fully homomorphic encryption (FHE). It uses the library HElib for the backend FHE operations. However this version is naive insofar as it does not exploit the full parallelism available. HElib gives us the ability to compute on vectors with a large number of entries whereas this program only uses a single slot in the vector. Future versions will address this. However this simpler version may be useful for research and experimental work with FHE. Note that like HElib, this program should not be used in production.
+
+This program requires HElib (https://github.com/shaih/HElib), libscdl (https://github.com/ciphron/scdl) and json-c (https://github.com/json-c/json-c; install libjson0-dev on Debian). Compile libscdl and place libscdl.a in the same directory as this file.
+
+After installing the above, modify the Makefile to specify the location of HElib (modify the HELIB variable). Run make to compile the program.
+
+To generate a public key and secret key with 80 bits of security and support for circuits of depth 16, run:
+./fhe 80 16 pub.key sec.key
+
+Write an SCDL file and corresponding vars file to describe a program you would like to evaluate. See the documentation for SCDL at https://github.com/ciphron/scdl/blob/master/scdl.pdf. For example we can use the included SCDL file gt4.scdl (note that there is an associated .vars file gt4.scdl.vars). This program takes two 4-bit unsigned integers as inputs and outputs a Boolean value that indicates whether the first integer is greater than the second one. To encrypt the inputs (i.e. two 4-bit integers) for this SCDL program, run:
+
+./fhe encrypt pub.key gt4.scdl inputs.ct
+
+which prompts you to enter two 4-bit integers. The program encrypts the bits and stores them in the ciphertext file inputs.ct.
+
+Now to evaluate the program gt4.scdl fully homomorphically on the encrypted inputs in inputs.ct, run the following:
+
+./fhe eval pub.key gt4.scdl inputs.ct output.ct
+
+which stores the encrypted result in output.ct.
+
+Then to decrypt the result in output.ct with the secret key sec.key, run:
+
+./fhe decrypt sec.key output.ct
+
+which should reveal the Boolean result of the computation (either true or false).
+
+To write programs in an imperative language and compile them into SCDL, see the project https://github.com/ciphron/sfdl_to_scdl.
+
+You can check the multiplicative depth of an SCDL program such as gt4.scdl by running:
+
+./fhe depth gt4.scdl

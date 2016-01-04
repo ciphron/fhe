@@ -1,0 +1,35 @@
+constant one = 1
+constant zero = 0
+
+func equal(x, y) = (x + y) + one
+func not(x) = x + one
+
+func or(x, y) = x + y + (x*y)
+func nor(x, y) = not(or(x, y))
+func nand(x, y) = not(x * y)
+func andn(x, y) = x * not(y)
+func orn(x, y) = or(not(y), x*y)
+func eq(x, y) = (x + y) + one
+func implies(x, y) = or(not(x), y)
+func nimplies(x, y) = not(implies(x, y))
+
+func mux(x, y, z) = or(not(x)*z, x*y)
+func nmux(x, y, z) = not(mux(x, y, z))
+func muxn(x, y, z) = or(not(x)*not(y)*z, or(not(x)*y*z, x*not(y)))
+func maj(x, y, z) = or(not(x)*y*z, x*or(not(y)*z, y))
+func nmaj(x, y, z) = not(maj(x, y, z))
+func majn(x, y, z) = or(not(x)*y*not(z), or(x*not(y)*not(z), x*y))
+func nmajn(x, y, z) = not(majn(x, y, z))
+func muxr(x, y, z) = or(not(x)*y, x*z)
+func gg(x, y, z) = or(not(x)*z, x*or(not(y)*z, y*not(z)))
+func gt150(x, y, z) = y*(or(not(x), z))
+
+func add_s(x, y, carry) = x + y + carry
+func add_c(x, y, carry) = or((x * y), (x + y) * carry)
+
+func add_s_h(x, y) = x + y
+
+func add_one_s(x, c) = x + one + c
+func add_one_c(x, c) = or(x, (not(x)  * c))
+
+func if(cond, t, f) = (cond*t) + (not(cond)*f)
