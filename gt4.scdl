@@ -1,15 +1,13 @@
-# Free software under GPl v.3 (see LICENSE file).
-
 include "base.scdl"
   
 input A : 4
 input B : 4
 
 func gt(X : 4, Y : 4) = \
-     or(X[3]*not(Y[3]),\
-     or(eq(X[3], Y[3])*X[2]*not(Y[2]),\
-     or((eq(X[3], Y[3])*eq(X[2], Y[2]))*(X[1]*not(Y[1])),\
-     (eq(X[3], Y[3])*eq(X[2], Y[2])) * (eq(X[1], Y[1])*X[0]) * not(Y[0]))))
+     (X[3]*not(Y[3])) + \
+     (eq(X[3], Y[3])*X[2]*not(Y[2]) + \
+     ((eq(X[3], Y[3])*eq(X[2], Y[2]))*(X[1]*not(Y[1]))) + \
+     ((eq(X[3], Y[3])*eq(X[2], Y[2])) * (eq(X[1], Y[1])*X[0]) * not(Y[0]))
 
 func out = gt(A, B)
 
